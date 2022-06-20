@@ -1,5 +1,4 @@
 from ast import main
-from cmath import nan
 import pandas as pd
 import numpy as np
 import math
@@ -29,34 +28,38 @@ def anal_vazh_sklad(realiz_avto,new_avto_kol,other_metrick):
 def skok_avto_VR(sklad_avto): 
     schetchik = 0
     #ищем колличество новых авто в файле
-    for i in range(100):
+    for i in range(sklad_avto.shape[0]):
         if sklad_avto.iloc[i]["№ п/п"] == "№ п/п":
             schetchik+=1
             if schetchik == 1:
-                return(sklad_avto.iloc[i-5]["№ п/п"])    
+                return(sklad_avto.iloc[i-5]["№ п/п"])
+
+def skok_avto_FD(sklad_avto): 
+    #ищем колличество новых авто в файле
+    for i in range(sklad_avto.shape[0]):
+        if sklad_avto.iloc[i]["№ п/п"] == "№ п/п":
+            schetchik+=1
+            if schetchik == 2:
+                return(sklad_avto.iloc[i-2]["№ п/п"])    
 
 def skok_avto_G(sklad_avto):
     schetchik = 0
     #ищем колличество новых авто в файле
-    for i in range(100):
+    for i in range(sklad_avto.shape[0]):
         if sklad_avto.iloc[i]["№ п/п"] == "№ п/п":
             schetchik+=1
             if schetchik == 2:
                 return(sklad_avto.iloc[i-2]["№ п/п"]) 
-#Надо доработать и привести к одной функции
-def vr_motors_date():
+
+def comp_date(name_comp):
 
     #подгрузка данных 
-    other_metrick = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(VR-Motors).xlsx',
-                                    sheet_name = 'Прочие метрики', usecols='A:N')
-    sklad_avto = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(VR-Motors).xlsx',
-                                    sheet_name = 'Авто на складах', skiprows=4, usecols='A:S')
-    realiz_avto = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(VR-Motors).xlsx',
-                                    sheet_name = 'Реализация авто за полгода')
-    money_on_schet = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(VR-Motors).xlsx',
-                                    sheet_name = 'Денег на счетах', skiprows=1, usecols='A:S')
-    plan_spend = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(VR-Motors).xlsx',
-                                    sheet_name = 'Планируемые затраты')
+    path='C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto('+name_comp+').xlsx'
+    other_metrick = pd.read_excel( path, sheet_name = 'Прочие метрики', usecols='A:N')
+    sklad_avto = pd.read_excel( path, sheet_name = 'Авто на складах', skiprows=4, usecols='A:S')
+    realiz_avto = pd.read_excel( path, sheet_name = 'Реализация авто за полгода')
+    money_on_schet = pd.read_excel( path, sheet_name = 'Денег на счетах', skiprows=1, usecols='A:S')
+    plan_spend = pd.read_excel( path, sheet_name = 'Планируемые затраты')
 
 
     if other_metrick.iloc[0]['значения'] == 0:
@@ -73,77 +76,20 @@ def vr_motors_date():
         print(vazhnost_pokupki)
     else:
         print(vazhnost_pokupki)
-
-def fd_motors_date():
-    #подгрузка данных
-    other_metrick = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(A-Motors).xlsx',
-                                    sheet_name = 'Прочие метрики', usecols='A:N')
-    sklad_avto = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(A-Motors).xlsx',
-                                    sheet_name = 'Авто на складах', skiprows=4, usecols='A:S')
-    realiz_avto = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(A-Motors).xlsx',
-                                    sheet_name = 'Реализация авто за полгода')
-    money_on_schet = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(A-Motors).xlsx',
-                                    sheet_name = 'Денег на счетах', skiprows=1, usecols='A:S')
-    plan_spend = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(A-Motors).xlsx',
-                                    sheet_name = 'Планируемые затраты', usecols='A:I')
-                                    
-    if other_metrick.iloc[0]['значения'] == 0:
-        new_avto_kol=skok_avto_VR(sklad_avto)
-    else:
-        print("Error")
-    vazhnost_pokupki=anal_vazh_sklad(realiz_avto,new_avto_kol,other_metrick)
-    print("Заказан автовоз? Введите Да или Нет")
-    otvet_avtovoz = input()
-    if otvet_avtovoz.upper() == "ДА":
-        print("Сколько авто купили")
-        new_avto_kol=int(new_avto_kol)+int(input())
-        vazhnost_pokupki=anal_vazh_sklad(realiz_avto,new_avto_kol,other_metrick)
-        print(vazhnost_pokupki)
-    else:
-        print(vazhnost_pokupki)    
-  
-
-def a_motors_date():
-    
-    #подгрузка данных
-    other_metrick = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(A-Motors).xlsx',
-                                    sheet_name = 'Прочие метрики', usecols='A:N')
-    sklad_avto = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(A-Motors).xlsx',
-                                    sheet_name = 'Авто на складах', skiprows=4, usecols='A:S')
-    realiz_avto = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(A-Motors).xlsx',
-                                    sheet_name = 'Реализация авто за полгода')
-    money_on_schet = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(A-Motors).xlsx',
-                                    sheet_name = 'Денег на счетах', skiprows=1, usecols='A:S')
-    plan_spend = pd.read_excel('C:\\Users\\Artem\\Desktop\\Coding\\Оценочная модель\\bay_avto(A-Motors).xlsx',
-                                    sheet_name = 'Планируемые затраты', usecols='A:I')
-    
-
-    #Основное тело алгоритма проверки на значимость
-    if other_metrick.iloc[0]['значения'] == 0:
-        new_avto_kol=skok_avto_G(sklad_avto)
-    else:
-        print("Error")
-    # оценка относительно склада
-    vazhnost_pokupki=anal_vazh_sklad(realiz_avto,new_avto_kol,other_metrick)
-    print("Заказан автовоз? Введите Да или Нет")
-    otvet_avtovoz = input()
-    if otvet_avtovoz.upper() == "ДА":
-        print("Сколько авто купили")
-        new_avto_kol=int(new_avto_kol)+int(input())
-        vazhnost_pokupki=anal_vazh_sklad(realiz_avto,new_avto_kol,other_metrick)
-        print(vazhnost_pokupki)
-    else:
-        print(vazhnost_pokupki)
+   
 
 def main():
-    print("Введите компанию 1 - ВР-моторс, 2 - ВР-Авто, 3 - ВР-Октава, 4 - А-Моторс, 5 - ВР-Сакура")
+    print("Введите компанию: 1 - ВР-моторс, 2 - ВР-Авто, 3 - ВР-Октава, 4 - А-Моторс, 5 - ВР-Сакура")
     compania = input()
     if compania == "1":
-        vr_motors_date()
+        comp_name = "VR-Motors"
+        comp_date(comp_name)
     elif compania == "2":
-        fd_motors_date()
+        comp_name = 'FD-Motors'
+        comp_date(comp_name)
     elif compania == "4":
-        a_motors_date()
+        comp_name = 'A-Motors'
+        comp_date(comp_name)
 
 if __name__ == '__main__':
     main()
